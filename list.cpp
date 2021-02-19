@@ -144,14 +144,7 @@ list<T>& list<T>::operator=(const list<T>& other)//Copy assignment operator
 
  int main()
 {
-	list<int> a;
-	for(int i=0;i<10;i++)
-	a.add_item(i);
-	a.add_item(3);
-	a.add_item(3);
-	a.display();
-	a.deleting_equals(3);
-		a.display();
+	
  return 0;
 }
 
