@@ -38,7 +38,7 @@ class list
 		list<T>& operator=(const list<T>& );
 	};
 template <class T>
-void list<T>::add_item(T d)//add to top of list
+void list<T>::add_item(T d)//adding an item to the end of the list
 {
 	
 	item<T>* newitem= new item<T>;
@@ -97,7 +97,7 @@ void list<T>::deleting_equals(T d)//Deleting all list items equal to the one pas
 		current=first->next;
 		delete first;
 		first=current;
-		
+		deleting_equals(d);
 		}
 	else
 	{
@@ -144,6 +144,14 @@ list<T>& list<T>::operator=(const list<T>& other)//Copy assignment operator
 
  int main()
 {
+	list<int> a;
+	for(int i=0;i<10;i++)
+	a.add_item(i);
+	a.add_item(3);
+	a.add_item(3);
+	a.display();
+	a.deleting_equals(3);
+		a.display();
  return 0;
 }
 
