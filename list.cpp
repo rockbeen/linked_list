@@ -1,150 +1,187 @@
+/*
+ * Copyright (c) 2017 Tecom LLC
+ * All rights reserved
+ *
+ * Исключительное право (c) 2017 принадлежит ООО Теком
+ * Все права защищены
+ */
 #include <iostream>
-using namespace std;
+
 template <class T>
 struct item
 {
-	T data;
-	item* next;
-	};
+    T data;
+    item* next;
+
+    item<T>(T data = T(), item<T> *next = nullptr)
+    {
+        this->data = data;
+        this->next = next;
+    }
+    };
 template <class T>
-class list
+class List
 {
-	private:
-		item<T>* first;
-		int size()//the size
-		{
-			item<T>* current=first;
-			int i=0;
-			while(current!=NULL)
-			{
-				i++;
-				current=current->next;
-		
-				}
-			return i;
-			}
-	public:
-		
-		list()
-		{first=NULL;}
-		~list();
-		list(const list & );//Default Constructor
-		void add_item(T );
-		void display();
-		void delete_item_end();
-		void show_size();
-		void display_last();
-		void deleting_equals(T d);
-		list<T>& operator=(const list<T>& );
-	};
+    private:
+        item<T>* first;
+        int size;
+        void swap(List<T>& src);
+    public:
+
+        List(){
+            first=nullptr;
+            size=0;
+        }
+        ~List();
+        List(const List & );//Default Constructor
+        bool is_empty();
+        void add_item(T );
+        void display();
+        void swap_list();
+        void delete_item();
+        void remove(T);
+        item<T> read_item();
+        List<T>& operator=(const List<T>& );
+    };
 template <class T>
-void list<T>::add_item(T d)//adding an item to the end of the list
+void List<T>::swap_list() {//expand the list
+       if(is_empty()) return;
+
+      item<T>* reversed_list = NULL;
+
+      for ( item<T> *node = first, *next_node; node != NULL; node = next_node)
+      {
+        next_node = node->next;
+        node->next = reversed_list;
+        reversed_list = node;
+      }
+
+      first=reversed_list;
+
+}
+template <class T>
+item<T> List<T>::read_item() {
+    if(!is_empty()) return first->data;
+
+}
+template <class T>
+bool List<T>::is_empty() {
+    return first == nullptr;
+}
+template <class T>
+void List<T>::add_item(T node)//adding an item to the end of the List
 {
-	
-	item<T>* newitem= new item<T>;
-	newitem->data=d;
-	newitem->next=first;
-	first=newitem;
-	
-	}
+
+    item<T>* newitem= new item<T>;
+    newitem->data=node;
+    newitem->next=first;
+    first=newitem;
+    ++size;
+
+    }
 
 template <class T>
-void list<T>::delete_item_end()//deleting to end of list
+void List<T>::delete_item()//deleting to end of List
 {
-	item<T>* current=first->next;
-	delete first;
-	first=current;
-	
-	}
+    if(is_empty()) return;
+    item<T>* current=first->next;
+    delete first;
+    first=current;
+    --size;
+
+    }
 template <class T>//display all elements on the screen
-void list<T>::display()
+void List<T>::display()
 {
-	item<T>* current=first;
-	while(current!=NULL)
-	{
-		cout<<current->data<<endl;
-		current=current->next;
-		}
-	}
-template <class T> 
-void list<T>::display_last()//Reading the last element
-{
-
-	cout<<first->data<<endl;
-
-	}
-template <class T> 
-list<T>::~list()//Destructor
-{
+    if(is_empty()) return;
     item<T>* current=first;
-    item<T>* current2;
-	while(current!=NULL)
-	{
-		current2=current->next;
-		delete current;
-		current=current2;
-		
-		}
-   
-}
-template <class T> 
-void list<T>::deleting_equals(T d)//Deleting all list items equal to the one passed
-{
-	item<T>* current=first;
-
-	if (current->data==d)
-	{
-		current=first->next;
-		delete first;
-		first=current;
-		deleting_equals(d);
-		}
-	else
-	{
-		while(current!=NULL)
-		{
-			if (current->data==d)
-				{
-					bool button=true;
-					item<T>* current2=first;
-					while(button)
-					{
-						if((current2->next)==current)
-						{
-							current2->next=current->next;
-							delete current;
-							button=false;
-							}
-						if (current2->next!=NULL) current2=current2->next;
-						}
-					current=current2;
-					}
-			current=current->next;
-			}
-		}
-   
-}
-template <class T> 
-void list<T>::show_size()//Reading the size
-{
-	cout<<size()<<endl;	
-	}
-template <class T> 
-list<T>::list(const list & other)//Copy Constructor
-{
-		first= other.first;
-	}
+    while(current!=nullptr)
+    {
+        std::cout<<current->data<<std::endl;
+        current=current->next;
+        }
+    }
 
 template <class T>
-list<T>& list<T>::operator=(const list<T>& other)//Copy assignment operator
+List<T>::~List()//Destructor
 {
-    first =other.first;
+        item<T>* currentNode = this->first;
+        while (currentNode)
+        {
+            item<T>* nextNode = currentNode->next;
+            delete currentNode;
+            currentNode = nextNode;
+        }
+
+
+}
+template <class T>
+void List<T>:: remove(T val) {//deleting all elements equal to a certain one
+
+    if (is_empty()) return;
+    item<T>* currentNode = first;
+    while(currentNode)
+    {
+        if (first->data == val) {
+              item<T>* p = first;
+              first = p->next;
+              delete p;
+
+        }
+        else{
+
+
+            item<T>* slow = first;
+            item<T>* fast = first->next;
+            while (fast && fast->data != val) {
+                fast = fast->next;
+                slow = slow->next;
+            }
+            if (!fast)  return;
+
+            slow->next = fast->next;
+            delete fast;
+        }
+     }
+}
+template <class T>
+List<T>::List(const List& copy):size(0),first(nullptr)
+  {
+      item<T> * last = nullptr;
+      for(item<T> * n = copy.first; n != nullptr; n = n->next)
+      {
+           item<T> * node = new item<T>(n->data);
+           if(!first)
+           {
+               first = node;
+           }
+           else
+           {
+               last->next = node;
+           }
+           last = node;
+           ++size;
+      }
+  }
+
+template <class T>
+List<T>& List<T>::operator=(const List<T>& other)//Copy assignment operator
+{
+    List(other).swap(*this);
     return *this;
 }
+template <class T>
+void List<T>::swap(List<T>& other)
+{
+       std::swap(size, other.size);
+       std::swap(first, other.first);
+}
+
+
+
 
  int main()
 {
-	
- return 0;
-}
 
+    return 0;
+}
