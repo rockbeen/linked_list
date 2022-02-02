@@ -5,44 +5,10 @@
  * Исключительное право (c) 2017 принадлежит ООО Теком
  * Все права защищены
  */
-#include <iostream>
 
-template <class T>
-struct item
-{
-    T data;
-    item* next;
+#include "list.hpp"
 
-    item<T>(T data = T(), item<T> *next = nullptr)
-    {
-        this->data = data;
-        this->next = next;
-    }
-    };
-template <class T>
-class List
-{
-    private:
-        item<T>* first;
-        int size;
-        void swap(List<T>& src);
-    public:
 
-        List(){
-            first=nullptr;
-            size=0;
-        }
-        ~List();
-        List(const List & );//Default Constructor
-        bool is_empty();
-        void add_item(T );
-        void display();
-        void swap_list();
-        void delete_item();
-        void remove(T);
-        item<T> read_item();
-        List<T>& operator=(const List<T>& );
-    };
 template <class T>
 void List<T>::swap_list() {//expand the list
        if(is_empty()) return;
@@ -177,11 +143,19 @@ void List<T>::swap(List<T>& other)
        std::swap(first, other.first);
 }
 
-
-
-
- int main()
+template <class T>
+void swapList(List<T>& left,List<T>& right)
 {
+       item<T> *node=left.first;
+       int size=left.size;
+       left.first=right.first;
+       left.size=right.size;
+       right.first=node;
+       right.size=size;
 
-    return 0;
+
+
 }
+
+
+
